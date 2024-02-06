@@ -1,4 +1,4 @@
- *{
+*{
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
@@ -7,13 +7,13 @@
 
 
   header {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     background-color: black;
     color: #fff;
-    padding: 10px;
+    padding: 40px;
   } 
   
   footer {
@@ -52,7 +52,24 @@ header h4{
 	background-size: 100vw 100vh;
 	transition: 1s;
 }
+.show-mobile{
+  display: none;
+}
 
+@media only screen and (max-width: 700px) {
+  .show-desktop {
+      display: none;
+  }
+  .show-mobile{
+      display: block;
+  }
+}
+
+.mo-img {
+  width:fit-content;
+   /* Set a fixed width for all images */
+ /* This will add some spacing between the images */
+}
 .logo-header{
 	position: absolute;
 	top: 40%;
@@ -315,6 +332,7 @@ p{
   .hamburger:hover + .image-container,
   .image-container:hover {
     display: flex;
+    
   }
 
   .image-container:hover img {

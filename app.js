@@ -86,7 +86,7 @@ document.addEventListener('wheel', function(event) {
 
     document.addEventListener('keydown', function(event) {
       // Get the distance that the mouse wheel was rotated
-      event.preventDefault();
+
       const key = event.key;
     
    switch(key){
@@ -159,6 +159,60 @@ const handleOnMove = e => {
   }
 }
 
+const track1 = document.getElementById("image-track");
+
+const handleOnDown1 = e => track1.dataset.mouseDownAt = e.clientY;
+
+const handleOnUp1 = () => {
+  track1.dataset.mouseDownAt = "0";  
+  track1.dataset.prevPercentage = track1.dataset.percentage;
+}
+
+var throttle1 = 0;
+var throttleIndex1 = 0;
+
+document.addEventListener('scroll', function(event) {
+  // Get the direction of the scroll
+  const deltaY = event.deltaY;
+
+  if (deltaY > 0) {
+    // Scrolling down
+    const percentage = .010 * -100,
+          nextPercentageUnconstrained = parseFloat(track1.dataset.prevPercentage) + percentage,
+          nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+
+    track1.dataset.percentage = nextPercentage;
+
+    track1.animate({
+      transform: `translate(-50%, ${nextPercentage}%)`
+    }, { duration: 1200, fill: "forwards" });
+
+    for(const image of track1.getElementsByClassName("image")) {
+      image.animate({
+        objectPosition: `${100 + nextPercentage}% center`
+      }, { duration: 1200, fill: "forwards" });
+    }
+    track1.dataset.prevPercentage = track1.dataset.percentage;
+  } else if (deltaY < 0) {    
+    // Scrolling up
+    const percentage = -.01 * -100,
+          nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
+          nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+
+    track1.dataset.percentage = nextPercentage;
+
+    track1.animate({
+      transform: `translate(-50%, ${nextPercentage}%)`
+    }, { duration: 1200, fill: "forwards" });
+
+    for(const image of track1.getElementsByClassName("image")) {
+      image.animate({
+        objectPosition: `${100 + nextPercentage}% center`
+      }, { duration: 1200, fill: "forwards" });
+    }
+    track1.dataset.prevPercentage = track.dataset.percentage;
+  }
+});
 // Get the modal
 
 
