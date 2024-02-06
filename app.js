@@ -158,27 +158,22 @@ const handleOnMove = e => {
     }, { duration: 1200, fill: "forwards" });
   }
 }
-
 const track1 = document.getElementById("image-track");
 
-const handleOnDown1 = e => track1.dataset.mouseDownAt = e.clientY;
+let touchStartY = 0;
 
-const handleOnUp1 = () => {
-  track1.dataset.mouseDownAt = "0";  
-  track1.dataset.prevPercentage = track1.dataset.percentage;
-}
+const handleTouchStart = event => {
+  touchStartY = event.touches[0].clientY;
+};
 
-var throttle1 = 0;
-var throttleIndex1 = 0;
-
-document.addEventListener('scroll', function(event) {
-  // Get the direction of the scroll
-  const deltaY = event.deltaY;
+const handleTouchMove = event => {
+  event.preventDefault(); // Prevent scrolling the page
+  const deltaY = event.touches[0].clientY - touchStartY;
 
   if (deltaY > 0) {
     // Scrolling down
     const percentage = .010 * -100,
-          nextPercentageUnconstrained = parseFloat(track1.dataset.prevPercentage) + percentage,
+          nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
           nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
 
     track1.dataset.percentage = nextPercentage;
@@ -196,7 +191,7 @@ document.addEventListener('scroll', function(event) {
   } else if (deltaY < 0) {    
     // Scrolling up
     const percentage = -.01 * -100,
-          nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
+          nextPercentageUnconstrained = parseFloat(track1.dataset.prevPercentage) + percentage,
           nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
 
     track1.dataset.percentage = nextPercentage;
@@ -210,10 +205,13 @@ document.addEventListener('scroll', function(event) {
         objectPosition: `${100 + nextPercentage}% center`
       }, { duration: 1200, fill: "forwards" });
     }
-    track1.dataset.prevPercentage = track.dataset.percentage;
+    track1.dataset.prevPercentage = track1.dataset.percentage;
   }
-});
-// Get the modal
+};
+
+document.addEventListener('touchstart', handleTouchStart);
+document.addEventListener('touchmove', handleTouchMove);
+
 
 
 
