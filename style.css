@@ -5,7 +5,10 @@
 	font-family: "Courier", monospace;
 }
 
-
+a { 
+  text-decoration: none;
+  outline: none;
+}
   header {
     position: absolute;
     top: 0;
@@ -20,8 +23,12 @@
     position: fixed;
     bottom: 0;
     left: 0;
+  
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     width: 100%;
-    background-color: #333;
+    background-color: black;
     color: #fff;
     padding: 0px;
   } 
@@ -318,8 +325,8 @@ p{
   }
 
   .image-container img {
-    width: 200px;
-    height: 200px;
+    width: 160px;
+    height: 160px;
     margin-bottom: 5px;
     filter: grayscale(100%);
     transition: filter 0.3s ease-in-out;
@@ -335,6 +342,15 @@ p{
     
   }
 
-  .image-container:hover img {
+
+  .image-container img {
+    width: 200px; /* Set your desired width */
+    height: auto; /* Maintain aspect ratio */
+    transition: transform 0.3s ease; /* Add a smooth transition effect */
+    filter: grayscale(100%);
+}
+
+.image-container img:hover {
+    transform: scale(1.1); /* Increase the scale on hover */
     filter: grayscale(0%);
-  }
+}

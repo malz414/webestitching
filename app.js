@@ -25,65 +25,49 @@ let intro = document.querySelector('.intro')
   })
 
   
-
   const track = document.getElementById("image-track");
 
-const handleOnDown = e => track.dataset.mouseDownAt = e.clientY;
-
-const handleOnUp = () => {
-  track.dataset.mouseDownAt = "0";  
-  track.dataset.prevPercentage = track.dataset.percentage;
-}
-
-var throttle = 0   ;
-var throttleIndex = 0;
-
-document.addEventListener('wheel', function(event) {
+  // Function to handle wheel scroll event
+  const handleWheelScroll = event => {
     // Get the distance that the mouse wheel was rotated
     const delta = event.deltaY;
-  
- 
-        if (delta > 0) {
-            const percentage = .010 * -100,
-            nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
-            nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
-      
-      track.dataset.percentage = nextPercentage;
-      
-      track.animate({
-        transform: `translate(-50%, ${nextPercentage}%)`
-      }, { duration: 1200, fill: "forwards" });
-      
-      for(const image of track.getElementsByClassName("image")) {
-        image.animate({
-          objectPosition: `${100 + nextPercentage}% center`
-        }, { duration: 1200, fill: "forwards" });
-      }
-      track.dataset.prevPercentage = track.dataset.percentage;
-        } else if (delta < 0) {    
-             const percentage = -.01 * -100,
-            nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
-            nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
-      
-      track.dataset.percentage = nextPercentage;
-      
-      track.animate({
-        transform: `translate(-50%, ${nextPercentage}%)`
-      }, { duration: 1200, fill: "forwards" });
-      
-      for(const image of track.getElementsByClassName("image")) {
-        image.animate({
-          objectPosition: `${100 + nextPercentage}% center`
-        }, { duration: 1200, fill: "forwards" });
-      }
-      track.dataset.prevPercentage = track.dataset.percentage;
-        }
     
-    
-    // Check the value of delta
+    if (delta > 0) {
+      // Scrolling down
+      scrollImages(-1.11);
+    } else if (delta < 0) {    
+      // Scrolling up
+      scrollImages(1.11);
+    }
+  };
   
-    });
-
+  // Function to scroll images
+  const scrollImages = percentage => {
+    const nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
+          nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+  
+          if (nextPercentage < -75) {
+            return; // If so, stop scrolling
+          }
+        
+    track.dataset.percentage = nextPercentage;
+  
+    track.animate({
+      transform: `translate(-50%, ${nextPercentage}%)`
+    }, { duration: 1200, fill: "forwards" });
+  
+    for(const image of track.getElementsByClassName("image")) {
+      image.animate({
+        objectPosition: `${100 + nextPercentage}% center`
+      }, { duration: 1200, fill: "forwards" });
+    }
+  
+    track.dataset.prevPercentage = track.dataset.percentage;
+  };
+  
+  // Attach wheel scroll event listener to handle scrolling
+  document.addEventListener('wheel', handleWheelScroll);
+  
     document.addEventListener('keydown', function(event) {
       // Get the distance that the mouse wheel was rotated
 
@@ -97,6 +81,10 @@ document.addEventListener('wheel', function(event) {
               const percentage = .010 * -100,
               nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
               nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+
+              if (nextPercentage < -85) {
+                return; // If so, stop scrolling
+              }
         
         track.dataset.percentage = nextPercentage;
         
@@ -145,6 +133,10 @@ const handleOnMove = e => {
   const percentage = (mouseDelta / maxDelta) * -100,
         nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
         nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+
+        if (nextPercentage < -85) {
+          return; // If so, stop scrolling
+        }
   
   track.dataset.percentage = nextPercentage;
   
@@ -158,23 +150,32 @@ const handleOnMove = e => {
     }, { duration: 1200, fill: "forwards" });
   }
 }
+
 const track1 = document.getElementById("image-track");
 
-let touchStartY = 0;
+const handleOnDown1 = e => track1.dataset.mouseDownAt = e.clientY;
 
-const handleTouchStart = event => {
-  touchStartY = event.touches[0].clientY;
-};
+const handleOnUp1 = () => {
+  track1.dataset.mouseDownAt = "0";  
+  track1.dataset.prevPercentage = track1.dataset.percentage;
+}
 
-const handleTouchMove = event => {
-  event.preventDefault(); // Prevent scrolling the page
-  const deltaY = event.touches[0].clientY - touchStartY;
+var throttle1 = 0;
+var throttleIndex1 = 0;
+
+document.addEventListener('scroll', function(event) {
+  // Get the direction of the scroll
+  const deltaY = event.deltaY;
 
   if (deltaY > 0) {
     // Scrolling down
     const percentage = .010 * -100,
-          nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
+          nextPercentageUnconstrained = parseFloat(track1.dataset.prevPercentage) + percentage,
           nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+
+          if (nextPercentage < -85) {
+            return; // If so, stop scrolling
+          }
 
     track1.dataset.percentage = nextPercentage;
 
@@ -191,7 +192,7 @@ const handleTouchMove = event => {
   } else if (deltaY < 0) {    
     // Scrolling up
     const percentage = -.01 * -100,
-          nextPercentageUnconstrained = parseFloat(track1.dataset.prevPercentage) + percentage,
+          nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
           nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
 
     track1.dataset.percentage = nextPercentage;
@@ -205,40 +206,42 @@ const handleTouchMove = event => {
         objectPosition: `${100 + nextPercentage}% center`
       }, { duration: 1200, fill: "forwards" });
     }
-    track1.dataset.prevPercentage = track1.dataset.percentage;
+    track1.dataset.prevPercentage = track.dataset.percentage;
   }
-};
-
-document.addEventListener('touchstart', handleTouchStart);
-document.addEventListener('touchmove', handleTouchMove);
+});
+// Get the modal
 
 
+var images = document.querySelectorAll("#image-track img");
 
+// Get the modal and modal content
+var modal = document.getElementById("myModal");
+var modalImg = document.getElementById("img01");
+var captionText = document.getElementById("caption");
 
-  // Get all images in the image-track
-  var images = document.querySelectorAll("#image-track img");
+// Iterate through each image and attach the modal functionality
+images.forEach(function(img) {
+  img.onclick = function() {
+    modal.style.display = "block";
+    modalImg.src = this.src;
+    captionText.innerHTML = this.alt;
+  }
+});
 
-  // Get the modal and modal content
-  var modal = document.getElementById("myModal");
-  var modalImg = document.getElementById("img01");
-  var captionText = document.getElementById("caption");
+// Get the close button
+var span = document.getElementsByClassName("close")[0];
 
-  // Iterate through each image and attach the modal functionality
-  images.forEach(function(img) {
-    img.onclick = function() {
-      modal.style.display = "block";
-      modalImg.src = this.src;
-      captionText.innerHTML = this.alt;
-    }
-  });
+// Close the modal when the close button is clicked
+span.onclick = function() {
+  modal.style.display = "none";
+}
 
-  // Get the close button
-  var span = document.getElementsByClassName("close")[0];
-
-  // Close the modal when the close button is clicked
-  span.onclick = function() {
+// Close the modal when clicking outside the modal content
+window.onclick = function(event) {
+  if (event.target == modal) {
     modal.style.display = "none";
   }
+};
 
 var modal2 = document.getElementById("myModal2");
 
@@ -276,7 +279,24 @@ window.ontouchmove = e => handleOnMove(e.touches[0]);
 const hamburger = document.querySelector('.hamburger');
 const imageContainer = document.querySelector('.image-container');
 
+// Function to toggle image container visibility on hamburger click
 hamburger.addEventListener('click', () => {
-  imageContainer.style.display = (imageContainer.style.display === 'flex') ? 'none' : 'flex';
+  if (imageContainer.style.display === 'flex') {
+    imageContainer.style.display = 'none';
+  } else {
+    imageContainer.style.display = 'flex';
+  }
 });
+const headImg = document.querySelectorAll('.image-container img');
 
+headImg.forEach(image => {
+    image.addEventListener('onmouseover', () => {
+        image.style.transform = 'scale(1.1)';
+        image.style.filter = 'grayscale(0%)';
+    });
+
+    image.addEventListener('onmouseout', () => {
+        image.style.transform = 'scale(1)';
+        image.style.filter = 'grayscale(100%)';
+    });
+});
